@@ -1,0 +1,30 @@
+{
+  "name": "karvi-challenge",
+  "version": "1.0.0-rc.1",
+  "description": "Challenge for Karvi job interview.",
+  "main": "index.js",
+  "scripts": {
+    "test": "exit 0",
+    "lint": "exit 0",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/AriX/karvi-challenge.git"
+  },
+  "keywords": [
+    "karvi",
+    "challenge"
+  ],
+  "author": "Leandro Cortese",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/AriX/karvi-challenge/issues"
+  },
+  "homepage": "https://gitlab.com/AriX/karvi-challenge#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^16.2.1",
+    "@commitlint/config-conventional": "^16.2.1",
+    "husky": "^7.0.4"
+  }
+}
