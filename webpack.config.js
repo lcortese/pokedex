@@ -27,6 +27,9 @@ module.exports = (env, argv) => {
         test: /\.(ts|tsx)?$/,
         include:  path.resolve(__dirname, 'src'),
         loader: 'babel-loader',
+      }, {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       }],
     },
     resolve: {
