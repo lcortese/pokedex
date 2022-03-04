@@ -10,6 +10,7 @@ module.exports = (env, argv) => {
     {
       host: 'localhost',
       port: 3000,
+      historyApiFallback: true,
       compress: true,
       hot: true,
     } : undefined;
