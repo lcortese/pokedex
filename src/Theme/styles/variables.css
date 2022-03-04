@@ -1,0 +1,48 @@
+:root {
+  --default-font-size: 12px;
+  --heading-font-size: 4rem;
+
+  --default-spacing: calc(1rem / 1.5);
+
+  --xs-min-width: 320px;
+  --xs-max-width: 480px;
+ 
+  --sm-min-width: 481px;
+  --sm-max-width: 767px;
+ 
+  --md-min-width: 768px;
+  --md-max-width: 1024px;
+
+  --lg-min-width:  1025px;
+  --lg-max-width:  1280px;
+
+  --background-color: #fff;
+  --highlight-color: #e4000f;
+
+
+  /* Extra Small */
+  @media (max-width: 480px) {
+    --default-spacing: calc(1rem / 3)
+  }
+    
+  /* Small */
+  @media (min-width: 481px) and (max-width: 767px) {
+    --default-spacing: calc(1rem / 2)
+  }
+    
+  /* Medium */
+  @media (min-width: 768px) and (max-width: 1024px){
+
+  }
+    
+  /* Large */
+  @media (min-width: 1025px) and (max-width: 1280px){
+    --default-font-size: 14px;
+    --default-spacing: calc(1rem / 1.4);
+  }
+    
+  /* Extra Large */
+  @media (min-width: 1281px) {
+    --default-font-size: 18px;
+  }
+}

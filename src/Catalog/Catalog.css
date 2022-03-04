@@ -1,0 +1,41 @@
+.Catalog {
+  & .Header {
+    position: sticky;
+    top:  0;
+  }
+
+  & .content {
+    padding: var(--default-spacing);
+
+    & .pokemon {
+      display: flex;
+      flex-wrap: wrap;
+
+      & li {
+        padding: var(--default-spacing);
+        box-sizing: border-box;
+
+        width: 33.33%;
+
+        @media (max-width: 480px) {
+          width: 100%;
+        }
+        /* Small */
+        @media (min-width: 481px) and (max-width: 767px) {
+          width: 50%;
+        }
+        /* Extra Large */
+        @media (min-width: 1281px) {
+          width: 25%;
+        }
+
+        & .pokemon-item {
+          width: 100%;
+          padding-bottom: 100%;
+          background: gray;
+        }
+      }
+    }
+
+  }
+}

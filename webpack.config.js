@@ -2,6 +2,8 @@ const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const postcssPresetEnv = require('postcss-preset-env');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = (env, argv) => {
   const develop = argv.mode === 'development';
@@ -30,7 +32,16 @@ module.exports = (env, argv) => {
         loader: 'babel-loader',
       }, {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader', 'postcss-loader'],
+        use: [
+          develop ? 'style-loader' : MiniCssExtractPlugin.loader,
+          'css-loader', {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [postcssPresetEnv({ stage: 0 })],
+              },
+            },
+          }],
       }],
     },
     resolve: {
@@ -43,7 +54,8 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({
         template: path.join(__dirname, 'src', 'index.html'),
       }),
-      devServer && new ForkTsCheckerWebpackPlugin()
+      develop && new ForkTsCheckerWebpackPlugin(),
+      !develop && new MiniCssExtractPlugin(),
     ].filter(Boolean),
   };
 };

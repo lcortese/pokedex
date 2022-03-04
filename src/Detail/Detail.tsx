@@ -1,11 +1,11 @@
 import React from 'react';
 
 const Detail = () => (
-  <main>
+  <section>
     <header>
       <h1>Detail</h1>
     </header>
-  </main>
+  </section>
 );
 
 export default Detail;
