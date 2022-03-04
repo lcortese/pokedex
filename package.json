@@ -4,6 +4,8 @@
   "description": "Challenge for Karvi job interview.",
   "main": "index.js",
   "scripts": {
+    "start": "webpack-dev-server --mode development",
+    "build": "webpack --mode production",
     "test": "exit 0",
     "lint": "exit 0",
     "prepare": "husky install"
@@ -23,8 +25,24 @@
   },
   "homepage": "https://gitlab.com/AriX/karvi-challenge#readme",
   "devDependencies": {
+    "@babel/core": "^7.17.5",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
     "@commitlint/cli": "^16.2.1",
     "@commitlint/config-conventional": "^16.2.1",
-    "husky": "^7.0.4"
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.13",
+    "babel-loader": "^8.2.3",
+    "fork-ts-checker-webpack-plugin": "^7.2.1",
+    "html-webpack-plugin": "^5.5.0",
+    "husky": "^7.0.4",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }
