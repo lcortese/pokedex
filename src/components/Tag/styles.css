@@ -1,0 +1,10 @@
+.Tag {
+  font-size: var(--small-font-size);
+  display: inline-flex;
+  padding: calc(var(--default-spacing) / 2) var(--default-spacing);
+  background: var(--neutral-color);
+  border: 1px solid var(--foreground-color);
+  border-radius: var(--default-border-radius);
+  margin: var(--default-spacing) calc(var(--default-spacing) / 2);
+  text-transform: capitalize;
+}

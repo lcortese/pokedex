@@ -1,39 +1,20 @@
 body, html {
-  font-family: 'Noto Serif', serif;
+  background: var(--background-color);
   font-size: var(--default-font-size);
   line-height: 1.2;
-  background: var(--background-color);
 }
 
-h1, h2, h3, h4, h5, h6 {
-  line-height: 1.5;
-  margin: var(--default-spacing) 0;
-  font-weight: normal;
+body, button {
+  font-family: 'Noto Serif', serif;
 }
 
-h1 {
-  font-size: var(--heading-font-size);
-  font-weight: 800;
-}
+a {
+  text-decoration: none;
+  color: var(--highlight-color);
 
-h2 {
-  font-size: calc(var(--heading-font-size) * .875);
-}
-
-h3 {
-  font-size: calc(var(--heading-font-size) * .75);
-}
-
-h4 {
-  font-size: calc(var(--heading-font-size) * .625);
-}
-
-h5 {
-  font-size: calc(var(--heading-font-size) * .5);
-}
-
-h6 {
-  font-size: calc(var(--heading-font-size) * .375);
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 p {

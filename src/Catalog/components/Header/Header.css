@@ -1,33 +1,24 @@
 .Header {
   display: flex;
   align-items:center;
-  background: var(--background-color);
+  background: var(--foreground-color);
+  box-shadow: var(--default-box-shadow);
 
   border-bottom: 1px solid var(--highlight-color);
   padding: var(--default-spacing);
 
   & .logo {
-    font-size: var(--heading-font-size);
+    font-size: var(--h1-font-size);
     height: 1.5em;
 
     & img {
       height: 100%;
     }
-  }
 
-  & > * {
     margin: 0 var(--default-spacing);
   }
 
-  &.compact {
-    background: blue;
-
-    & .logo {
-      height: 1em;
-    }
-
-    & h1 {
-      font-size: 2rem;
-    }
+  & .Heading {
+    margin: 0 var(--default-spacing); 
   }
 }
