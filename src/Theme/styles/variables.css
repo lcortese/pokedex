@@ -8,6 +8,7 @@
   --h6-font-size: calc(var(--h1-font-size) * .375);
 
   --default-spacing: calc(1rem / 1.5);
+  --default-transition: all 0.3s;;
 
   --xs-min-width: 320px;
   --xs-max-width: 480px;

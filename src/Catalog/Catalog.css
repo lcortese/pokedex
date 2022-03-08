@@ -1,5 +1,5 @@
 .Catalog {
-  & .Header {
+  & .HeaderPage {
     position: sticky;
     top:  0;
     z-index: var(--layout-z-index);

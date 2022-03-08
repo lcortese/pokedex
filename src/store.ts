@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { pokemon } from './reducers';
+import { pokemonReducer } from './Pokemon';
 import { catalogReducer } from './Catalog';
 
 export const store = configureStore({
   reducer: {
-    pokemon,
+    pokemon: pokemonReducer,
     catalog: catalogReducer,
   },
 });

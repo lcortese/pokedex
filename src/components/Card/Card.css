@@ -7,9 +7,9 @@
 
   border-radius: var(--default-border-radius);
 
-  transition: all 0.2s;
+  transition: var(--default-transition);
 
-  &.clickeable {
+  &.Card--clickeable {
     cursor: pointer;
     &:focus,
     &:hover {

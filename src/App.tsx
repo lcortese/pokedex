@@ -4,13 +4,13 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
 import Catalog from './Catalog';
-import Detail from './Detail';
+import Pokemon from './Pokemon';
 
 const App = () => (
   <div className="App">
     <Routes>
       <Route path="/" element={<Catalog />} />
-      <Route path="/:id" element={<Detail />} />
+      <Route path="/:id" element={<Pokemon />} />
     </Routes>
   </div>
 );

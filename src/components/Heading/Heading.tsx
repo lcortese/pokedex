@@ -2,7 +2,7 @@ import React from 'react';
 
 import { WrapperProps } from '../../types';
 
-import './styles.css';
+import './Heading.css';
 import { Types } from './types';
 
 type Props = WrapperProps & {

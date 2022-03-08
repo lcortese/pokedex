@@ -1,4 +1,4 @@
-.Card.Item {
+.Item.Card {
   & .types {
     position: absolute;
     bottom: 0;

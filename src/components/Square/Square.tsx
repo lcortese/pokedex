@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './styles.css';
+import './Square.css';
 
 import { WrapperProps } from '../../types';
 

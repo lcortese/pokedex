@@ -9,7 +9,7 @@ import Square from '../../../components/Square';
 import SingleLine from '../../../components/SingleLine';
 import Tag from '../../../components/Tag';
 
-import './styles.css';
+import './Item.css';
 
 type Props = {
   id: number,

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { WrapperProps } from '../../types';
 
-import './styles.css';
+import './Tag.css';
 
 const Tag = ({ children }: WrapperProps) => (
   <div className="Tag">{children}</div>

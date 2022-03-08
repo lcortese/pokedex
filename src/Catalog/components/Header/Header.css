@@ -1,12 +1,4 @@
-.Header {
-  display: flex;
-  align-items:center;
-  background: var(--foreground-color);
-  box-shadow: var(--default-box-shadow);
-
-  border-bottom: 1px solid var(--highlight-color);
-  padding: var(--default-spacing);
-
+.Header--catalog {
   & .logo {
     font-size: var(--h1-font-size);
     height: 1.5em;

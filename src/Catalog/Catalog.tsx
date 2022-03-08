@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '../hooks';
 
-import { loadItems } from '../reducers/pokemon';
+import { loadItems } from '../Pokemon/reducer';
 import Loading from '../components/Loading';
 
 import './Catalog.css';

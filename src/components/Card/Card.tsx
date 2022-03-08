@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './styles.css';
+import './Card.css';
 
 import { WrapperProps } from '../../types';
 

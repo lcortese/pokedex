@@ -2,7 +2,7 @@ import React from 'react';
 
 import { WrapperProps } from '../../../types';
 
-import './styles.css';
+import './PaginationButton.css';
 
 type Props = WrapperProps & {
   onClick: () => void

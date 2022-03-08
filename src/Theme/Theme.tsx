@@ -10,7 +10,7 @@ type Props = {
 
 const Theme = ({ children }: Props) => {
   const link = document.createElement( 'link' );
-  link.href = 'https://fonts.googleapis.com/css2?family=Noto+Serif';
+  link.href = 'https://fonts.googleapis.com/css2?family=Didact+Gothic';
   link.rel = 'stylesheet';
   
   document.getElementsByTagName('head')[0].appendChild(link);
