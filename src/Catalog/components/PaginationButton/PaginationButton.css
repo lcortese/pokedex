@@ -13,6 +13,6 @@
 
   &:hover {
     color:  var(--highlight-color);
-    transition: all 0.3s;
+    transition: var(--default-transition);
   }
 }

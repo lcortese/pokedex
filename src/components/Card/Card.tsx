@@ -6,18 +6,32 @@ import { WrapperProps } from '../../types';
 
 type CardProps = WrapperProps & {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void,
-  disabled: boolean
+  onAuxClick?: (e: React.MouseEvent<HTMLElement>) => void,
+  disabled?: boolean,
+  shadow?: boolean
 };
 
-const Card = ({ className, children, onClick, disabled = false }: CardProps) => {
+const Card = ({
+  className,
+  children,
+  onClick,
+  onAuxClick,
+  disabled = false,
+  shadow = false,
+}: CardProps) => {
   const classNames = [
     'Card',
     className,
-    !disabled && onClick && 'clickeable',
+    !disabled && onClick && 'Card--clickeable',
+    shadow && 'Card--shadow',
   ].filter(Boolean).join(' ');
 
   return (
-    <article className={classNames} onClick={!disabled ? onClick : undefined}>
+    <article
+      className={classNames}
+      onClick={!disabled ? onClick : undefined}
+      onAuxClick={!disabled ? onAuxClick : undefined}
+    >
       {children}
     </article>
   );

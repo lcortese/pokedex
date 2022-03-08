@@ -1,12 +1,21 @@
 import { createSlice, PayloadAction, Dispatch } from '@reduxjs/toolkit';
 
 import PokemonApi from '../apis/pokemon';
+import PokemonSpeciesApi, { Species } from '../apis/pokemonSpecies';
+import EvolutionChainApi from '../apis/evolutionChain';
 
 type Pokemon = {
   id: number,
-  name: string,
-  picture: string,
-  types: string[],
+  name?: string,
+  picture?: string,
+  types?: string[],
+  species?: Species,
+  /*
+   * NOTE:
+   * The evolutions chains can has his own store and link with pokemon store through the pokemon id.
+   * But considering the size of this app I decided to avoid create a new store.
+   */
+  evolutionChain?: number[]
 };
 
 type ItemState = {
@@ -38,10 +47,26 @@ export const pokemonSlice = createSlice({
   name: 'pokemon',
   initialState,
   reducers: {
-    pushItems: (state, { payload }: PayloadAction<Items>) => {
+    setItemsState: (state, { payload }: PayloadAction<number[]>) => {
+      const items = payload.reduce((collector: Items, id: number) => {
+        const currentItem = state.items[id];
+
+        return {
+          ...collector,
+          [id]: {
+            ...initialItemState,
+            ...currentItem,
+            data: {
+              ...currentItem?.data,
+              id,
+            },
+          },
+        };
+      }, {});
+
       state.items = {
         ...state.items,
-        ...payload,
+        ...items,
       };
     },
     setItemLoaded: (state, { payload: { id, value } }: PayloadAction<{ id: number, value: boolean }>) => {
@@ -56,10 +81,13 @@ export const pokemonSlice = createSlice({
         loading: value,
       };
     },
-    setItemData: (state, { payload: { id, value } }: PayloadAction<{ id: number, value: Pokemon }>) => {
+    setItemData: (state, { payload: { id, value } }: PayloadAction<{ id: number, value: Partial<Pokemon> }>) => {
       state.items[id] = {
         ...state.items[id],
-        data: value,
+        data: {
+          ...state.items[id].data,
+          ...value,
+        },
       };
     },
     setItemError: (state, { payload: { id, value } }: PayloadAction<{ id: number, value: string }>) => {
@@ -71,7 +99,7 @@ export const pokemonSlice = createSlice({
   },
 });
 
-export const { pushItems, setItemLoaded, setItemLoading, setItemData, setItemError } = pokemonSlice.actions;
+export const { setItemsState, setItemLoaded, setItemLoading, setItemData, setItemError } = pokemonSlice.actions;
 
 export const loadItem = (id: number) => async (dispatch: Dispatch) => {
   dispatch(setItemLoading({ id, value: true }));
@@ -80,6 +108,7 @@ export const loadItem = (id: number) => async (dispatch: Dispatch) => {
     const item = await PokemonApi.get(id);
     dispatch(setItemData({ id, value: item }));
     dispatch(setItemLoaded({ id, value: true }));
+    return item;
   } catch (e) {
     dispatch(setItemError({ id, value: e.message }));
   } finally {
@@ -87,26 +116,8 @@ export const loadItem = (id: number) => async (dispatch: Dispatch) => {
   }
 };
 
-export const loadItems = (list: number[]) => (dispatch: Dispatch, getState: Function) => {
-  const { items } = getState().pokemon;
-
-  const newItemsValue = list.reduce((collector: Items, id: number) => {
-    const currentItem = items[id];
-
-    return {
-      ...collector,
-      [id]: {
-        ...initialItemState,
-        ...currentItem,
-        data: {
-          ...currentItem?.data,
-          id,
-        },
-      },
-    };
-  }, {});
-
-  dispatch(pushItems(newItemsValue));
+export const loadItems = (list: number[]) => (dispatch: Dispatch) => {
+  dispatch(setItemsState(list));
 
   /*
    * Load data for each item
@@ -114,6 +125,57 @@ export const loadItems = (list: number[]) => (dispatch: Dispatch, getState: Func
   list.forEach((id: number) => {
     loadItem(id)(dispatch);
   });
+};
+
+export const loadItemSpecies = (id: number) => async (dispatch: Dispatch, getState: Function) => {
+  dispatch(setItemLoading({ id, value: true }));
+
+  try {
+    const { items } = getState().pokemon;
+    const { data } = items[id];
+    const species = await PokemonSpeciesApi.get(data.speciesName);
+
+    dispatch(setItemData({
+      id,
+      value: {
+        species,
+      },
+    }));
+  } catch (e) {
+    dispatch(setItemError({ id, value: e.message }));
+  } finally {
+    dispatch(setItemLoading({ id, value: false }));
+  }
+};
+
+
+export const loadEvolutionChain = (id: number) => async (dispatch: Dispatch, getState: Function) => {
+  dispatch(setItemLoading({ id, value: true }));
+
+  try {
+    const { items } = getState().pokemon;
+    const { data } = items[id];
+    const evolutionChain = await EvolutionChainApi.get(data.species.evolutionChainId);
+
+    const siblings = evolutionChain.filter(pokemonId => pokemonId !== id);
+
+    dispatch(setItemsState(siblings));
+
+    await Promise.all(siblings.map((siblingId) => 
+      loadItem(siblingId)(dispatch),
+    ));
+
+    dispatch(setItemData({
+      id,
+      value: {
+        evolutionChain,
+      },
+    }));
+  } catch (e) {
+    dispatch(setItemError({ id, value: e.message }));
+  } finally {
+    dispatch(setItemLoading({ id, value: false }));
+  }
 };
 
 export default pokemonSlice.reducer;

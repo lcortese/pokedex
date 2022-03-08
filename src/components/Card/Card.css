@@ -19,8 +19,11 @@
     }
   }
 
+  &.Card--shadow {
+    box-shadow: var(--default-box-shadow);
+  }
+
   & .CardHeader,
-  & .CardContent,
   & .CardFooter {
     &:first-child {
       padding-top: 0;
@@ -38,6 +41,7 @@
 .CardHeader,
 .CardContent,
 .CardFooter {
+  box-sizing: border-box;
   padding: var(--default-spacing);
 }
 

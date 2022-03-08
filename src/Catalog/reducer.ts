@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, Dispatch } from '@reduxjs/toolkit';
 
-import PokemonApi, { ListItem, ListPayload } from '../apis/pokemon';
+import PokemonApi, { ListPayload } from '../apis/pokemon';
 
 type Range = {
   min: number
@@ -83,7 +83,7 @@ const fetch = async ({ offset, limit }: ListPayload, dispatch: Dispatch, useStat
       max: Math.max(max, offset + limit),
     }));
 
-    return response.items.map((item: ListItem) => item.id);
+    return response.items.map(item => item.id);
   } catch (e) {
     throw e;
   } finally {

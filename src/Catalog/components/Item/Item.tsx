@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useAppSelector } from '../../../hooks';
@@ -18,14 +18,19 @@ type Props = {
 const Item = ({ id }: Props) => {
   const pokemonState = useAppSelector((rootState) => rootState.pokemon);
   const item = pokemonState.items[id];
+  const callout = useRef(null);
 
-  const clickHandler = (e: React.MouseEvent<HTMLElement>) => {
-    const callout = e.currentTarget.querySelector('.callout');
-    (callout as HTMLElement).click();
+  const clickHandler = () => {
+    callout.current.click();
+  };
+
+  const auxClickHandler = () => {
+    const auxClick = new MouseEvent('click', { 'button': 1, 'which': 2 });
+    callout.current.dispatchEvent(auxClick);
   };
 
   return item ? (
-    <Card className="Item" onClick={clickHandler} disabled={item.loading}>
+    <Card className="Item" onClick={clickHandler} onAuxClick={auxClickHandler} disabled={item.loading}>
       <CardHeader>
         <Heading capitalize size={Types.H6}>
           <SingleLine title={item.data.name}>{item.data.name || '-'}</SingleLine>
@@ -33,14 +38,14 @@ const Item = ({ id }: Props) => {
       </CardHeader>
 
       <CardContent>
-        {item.loading ? (<Loading />) : ''}
+        {item.loading ? (<Loading />) : null}
         <Square>
           {item.loaded ? (
             <img src={item.data.picture} alt={item.data.name} />
-          ) : ''}
+          ) : null}
           {!item.loaded && item.error ? (
             item.error
-          ) : ''}
+          ) : null}
         </Square>
         {item.loaded ? (
           <div className="types">
@@ -48,14 +53,14 @@ const Item = ({ id }: Props) => {
               <Tag key={type}>{type}</Tag>
             ))}
           </div>
-        ) : ''}
+        ) : null}
       </CardContent>
 
       <CardFooter>
-        <Link className="callout" onClick={e => e.stopPropagation()} to={`/${item.data.id}`}>View Details</Link>
+        <Link ref={callout} onClick={e => e.stopPropagation()} to={`/${item.data.id}`}>View Details</Link>
       </CardFooter>
     </Card>
-  ) : <></>;
+  ) : null;
 };
 
 export default Item;

@@ -28,7 +28,7 @@ const Catalog = () => {
   useEffect(() => {
     let action;
 
-    if (!state.loaded || isNaN(offset)) {
+    if (!state.loaded) {
       action = load;
     } else {
       if (offset + ITEMS_PER_PAGE > state.range.max) {
@@ -71,37 +71,40 @@ const Catalog = () => {
       <div className="Catalog__content">
         {state.loading ? (
           <Loading />
-        ) : ''}
+        ) : null}
 
-        {state.loaded && !state.items ? (
+        {state.error ? (
+          <div>Error: {state.error}</div>
+        ) : null}
+
+        {state.loaded && !state.items.length ? (
           <div>No results</div>
-        ) : ''}
+        ) : null}
 
-        {state.loaded && state.range.min > 0 ? (
-          <PaginationButton onClick={goToPrev} disabled={state.loading}>
-            Load Prev
-          </PaginationButton>
-        ) : ''}
+        {state.loaded && state.items.length ? (
+          <>
 
-        {state.loaded ? (
-          <ul className="pokemon">
+          {state.range.min > 0 ? (
+            <PaginationButton onClick={goToPrev} disabled={state.loading}>
+              Load Prev
+            </PaginationButton>
+          ) : null}
+
+          <ul className="Items">
             {state.items.map((id: number) => (
               <li key={id}>
                 <Item id={id} />
               </li>
             ))}
           </ul>
-        ) : ''}
 
-        {!state.loaded && state.error ? (
-          <div>Error: {state.error}</div>
-        ) : ''}
+          {state.range.max < state.total ? (
+            <PaginationButton onClick={goToNext} disabled={state.loading}>
+              Load Next
+            </PaginationButton>
+          ) : null}
 
-        {state.loaded && state.range.max < state.total ? (
-          <PaginationButton onClick={goToNext} disabled={state.loading}>
-            Load Next
-          </PaginationButton>
-        ) : ''}
+        </>) :  null}
       </div>
     </main>
   );

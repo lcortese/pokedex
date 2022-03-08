@@ -1,5 +1,7 @@
 import queryString from 'query-string';
 
+import { extractId } from './helpers';
+
 const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
 
 const buildUrl = (query?: Object) => {
@@ -11,19 +13,17 @@ export type ListPayload = {
   limit: number,
 };
 
-type ListResponseItem = {
-  name: string,
-  url: string,
-};
-
 type ListResponse = {
   count: number,
   next: string,
   previous: string,
-  results: ListResponseItem[]
+  results: {
+    name: string,
+    url: string,
+  }[]
 };
 
-export type ListItem = {
+type ListItem = {
   id: number,
   name: string,
 };
@@ -52,14 +52,18 @@ type ItemResponse = {
     type: {
       name: string
     }
-  }>
+  }>,
+  species: {
+    name: string
+  }
 };
 
-type Item = {
+type Pokemon = {
   id: number,
   name: string,
   picture: string,
-  types: string[]
+  types: string[],
+  speciesName: string,
 };
 
 export default new class PokemonApi {
@@ -67,15 +71,15 @@ export default new class PokemonApi {
     return fetch(buildUrl(data))
       .then(response => response.json())
       .then((response: ListResponse) => ({
-        items: response.results.map((result: ListResponseItem) => ({
-          id: parseInt(result.url.split('/').filter(Boolean).pop()),
+        items: response.results.map((result) => ({
+          id: extractId(result.url),
           name: result.name,
         })),
         total: response.count,
       }));
   }
 
-  get(id: number): Promise<Item> {
+  get(id: number): Promise<Pokemon> {
     return fetch(`${BASE_URL}/${id}`)
       .then(response => response.json())
       .then((response: ItemResponse) => ({
@@ -83,6 +87,7 @@ export default new class PokemonApi {
         name: response.name.replace(/-/g, ' '),
         picture: response.sprites.other.dream_world.front_default || response.sprites.front_default || response.sprites.front_shiny,
         types: response.types.map((item: any) => item.type.name),
+        speciesName: response.species.name,
       }));
   }
 };
