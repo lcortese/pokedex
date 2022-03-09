@@ -1,0 +1,9 @@
+.HeaderPage {
+  display: flex;
+  align-items:center;
+  background: var(--foreground-color);
+  box-shadow: var(--default-box-shadow);
+
+  border-bottom: 2px solid var(--highlight-color);
+  padding: var(--default-spacing);
+}

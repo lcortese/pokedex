@@ -1,0 +1,44 @@
+.Heading {
+  &.h1, &.h2, &.h3, &.h4, &.h5, &.h6 {
+    line-height: 1.5;
+    font-weight: normal;
+    margin: 0.5rem 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &.h1 {
+    font-size: var(--h1-font-size);
+    font-weight: 800;
+  }
+
+  &.h2 {
+    font-size: var(--h2-font-size);
+  }
+
+  &.h3 {
+    font-size: var(--h3-font-size);
+  }
+
+  &.h4 {
+    font-size: var(--h4-font-size);
+  }
+
+  &.h5 {
+    font-size: var(--h5-font-size);
+  }
+
+  &.h6 {
+    font-size: var(--h6-font-size);
+  }
+
+  &.capitalize {
+    text-transform: capitalize;
+  }
+}

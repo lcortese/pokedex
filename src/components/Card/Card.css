@@ -1,0 +1,55 @@
+.Card {
+  position: relative;
+  padding: var(--default-spacing);
+  border: 1px solid var(--neutral-color);
+  z-index: var(--content-z-index);
+  background: var(--foreground-color);
+
+  border-radius: var(--default-border-radius);
+
+  transition: var(--default-transition);
+
+  &.Card--clickeable {
+    cursor: pointer;
+    &:focus,
+    &:hover {
+      border-color: var(--highlight-color);
+      box-shadow: var(--default-box-shadow);
+      margin: calc(var(--default-spacing) * -1);
+    }
+  }
+
+  &.Card--shadow {
+    box-shadow: var(--default-box-shadow);
+  }
+
+  & .CardHeader,
+  & .CardFooter {
+    &:first-child {
+      padding-top: 0;
+    }
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+}
+
+.CardContent {
+  position: relative;
+}
+
+.CardHeader,
+.CardContent,
+.CardFooter {
+  box-sizing: border-box;
+  padding: var(--default-spacing);
+}
+
+
+.CardHeader {
+  border-bottom: 1px solid var(--neutral-color);
+}
+
+.CardFooter {
+  border-top: 1px solid var(--neutral-color); 
+}

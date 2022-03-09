@@ -1,0 +1,16 @@
+.Header--catalog {
+  & .logo {
+    font-size: var(--h1-font-size);
+    height: 1.5em;
+
+    & img {
+      height: 100%;
+    }
+
+    margin: 0 var(--default-spacing);
+  }
+
+  & .Heading {
+    margin: 0 var(--default-spacing); 
+  }
+}

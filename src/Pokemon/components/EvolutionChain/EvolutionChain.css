@@ -1,0 +1,32 @@
+.EvolutionChain {
+  --width: 280px;
+
+  display: flex;
+  margin: 0 auto;
+  width: fit-content;
+
+  & ul {
+    display: flex;
+    flex-wrap: wrap;
+
+    & li {
+      padding: var(--default-spacing);
+      box-sizing: border-box;
+      min-width: var(--width);
+    }
+  }
+
+  &.EvolutionChain--narrow {
+    flex-wrap: nowrap;
+
+    max-width: 100%;
+    overflow-y: auto;
+
+    & ul {
+      flex-wrap: nowrap;
+      & li {
+        min-width: calc(var(--width) - var(--default-spacing) * 2);
+      }
+    }
+  }
+}

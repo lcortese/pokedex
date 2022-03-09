@@ -1,0 +1,7 @@
+.SingleLine {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: pre;
+  display: block;
+  width: 100%;
+}

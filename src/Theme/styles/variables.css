@@ -1,0 +1,64 @@
+:root {
+  --default-font-size: 12px;
+  --h1-font-size: 4rem;
+  --h2-font-size: calc(var(--h1-font-size) * .875);
+  --h3-font-size: calc(var(--h1-font-size) * .75);
+  --h4-font-size: calc(var(--h1-font-size) * .625);
+  --h5-font-size: calc(var(--h1-font-size) * .5);
+  --h6-font-size: calc(var(--h1-font-size) * .375);
+
+  --default-spacing: calc(1rem / 1.5);
+  --default-transition: all 0.3s;;
+
+  --xs-min-width: 320px;
+  --xs-max-width: 480px;
+ 
+  --sm-min-width: 481px;
+  --sm-max-width: 767px;
+ 
+  --md-min-width: 768px;
+  --md-max-width: 1024px;
+
+  --lg-min-width:  1025px;
+  --lg-max-width:  1280px;
+
+  --background-color: #eee;
+  --foreground-color: #fff;
+  --neutral-color: #bfbfbf;
+  --highlight-color: #e4000f;
+
+  --default-box-shadow:  0px 4px 4px -2px rgba(0,0,0,0.25);
+  --default-border-radius:  2px;
+
+  --content-z-index: 0;
+  --layout-z-index: 400;
+  --overlay-z-index: 800;
+  --overlay-content-z-index: 900;
+
+
+  /* Extra Small */
+  @media (max-width: 480px) {
+    --default-spacing: calc(1rem / 2);
+  }
+    
+  /* Small */
+  @media (min-width: 481px) and (max-width: 767px) {
+    --default-spacing: calc(1rem / 2);
+  }
+    
+  /* Medium */
+  @media (min-width: 768px) and (max-width: 1024px){
+
+  }
+    
+  /* Large */
+  @media (min-width: 1025px) and (max-width: 1280px){
+    --default-font-size: 14px;
+    --default-spacing: calc(1rem / 1.4);
+  }
+    
+  /* Extra Large */
+  @media (min-width: 1281px) {
+    --default-font-size: 16px;
+  }
+}

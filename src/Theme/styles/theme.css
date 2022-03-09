@@ -1,0 +1,25 @@
+body, html {
+  background: var(--background-color);
+  font-size: var(--default-font-size);
+  line-height: 1.2;
+}
+
+body, button {
+  font-family: 'Didact Gothic', serif;
+}
+
+a {
+  text-decoration: none;
+  color: var(--highlight-color);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+p {
+  margin-bottom: 1em;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

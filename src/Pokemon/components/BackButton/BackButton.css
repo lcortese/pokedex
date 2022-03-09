@@ -1,0 +1,21 @@
+.BackButton {
+  font-size: var(--h1-font-size);
+  background: transparent;
+  cursor: pointer;
+
+  & .BackButton__icon {
+    transition: var(--default-transition);
+  }
+
+  &:hover {
+    & .BackButton__icon {
+      fill: var(--highlight-color)
+    }
+  }
+}
+
+.BackButton__icon {
+  display: block;
+  height: 1.2em;
+  padding: 0.15em;
+}

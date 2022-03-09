@@ -1,0 +1,18 @@
+.PaginationButton {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: var(--h6-font-size);
+  padding: var(--default-spacing);
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:hover {
+    color:  var(--highlight-color);
+    transition: var(--default-transition);
+  }
+}

@@ -1,0 +1,7 @@
+.Item.Card {
+  & .types {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}

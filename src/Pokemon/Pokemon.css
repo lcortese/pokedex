@@ -1,0 +1,81 @@
+.Pokemon {
+  & .HeaderPage {
+    & .Heading {
+      flex: 1;
+      margin: 0 var(--default-spacing);
+      overflow: hidden;
+    }
+
+    & .BackButton {
+      margin: 0 var(--default-spacing);
+    }
+  }
+
+  & .capitalize {
+    text-transform: capitalize;
+  }
+}
+
+.Pokemon__content {
+  padding: var(--default-spacing);
+
+  & > .Card {
+    margin: var(--default-spacing) 0 calc(var(--default-spacing) * 2);
+  }
+}
+
+.Pokemon__content__general {
+  display: flex;
+
+  & .CardContent.picture,
+  & .CardContent.summary {
+    padding-left: calc(var(--default-spacing) * 2);
+    padding-right: calc(var(--default-spacing) * 2);
+
+    &:first-child {
+      padding-left: inherit;
+    }
+    &:last-child {
+      padding-right: inherit;
+    }
+  }
+
+  & .CardContent.picture {
+    width: 60%;
+    text-align: center;
+
+    max-width: 500px;
+    border-right: 1px solid var(--neutral-color);
+
+    & > img[src$='.svg'] {
+      width: 100%;
+    }
+  }
+
+  & .CardContent.summary {
+    & dl {
+      & dt {
+        margin-top: 1rem;
+      }
+
+      & :first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    & .CardContent.picture,
+    & .CardContent.summary {
+      min-width: auto;
+      padding: inherit;
+    }
+
+    & .CardContent.picture {
+      width: 100%;
+      border-right: 0;
+      border-bottom: 1px solid var(--neutral-color);
+    }
+  }
+}
