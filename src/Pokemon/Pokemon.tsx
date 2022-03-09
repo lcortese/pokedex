@@ -52,11 +52,15 @@ const Pokemon = () => {
         </Heading>
       </HeaderPage>
 
-        {state.error ? (
-          <p>{state.error}</p>
-        ) : null}
+      {state.error ? (
+        <p>{state.error}</p>
+      ) : null}
 
       <article className="Pokemon__content">
+
+        {state.loading ? (
+          <Loading />
+        ) : null}
 
         <Card className="Pokemon__content__general" shadow>
           <CardContent className="picture">
@@ -64,10 +68,6 @@ const Pokemon = () => {
               <img src={state.data.picture} alt={state.data.name} />
             ) : null}
           </CardContent>
-
-          {state.loading ? (
-            <Loading />
-          ) : null}
 
           <CardContent className="summary">
             <dl className="Pokemon__content__list">
@@ -85,37 +85,28 @@ const Pokemon = () => {
             <Heading type={Types.H1} size={Types.H5}>Description</Heading>
           </CardHeader>
 
-          {state.loading ? (
-            <Loading />
-          ) : null}
-
           <CardContent>
-            {state.data?.species?.versions?.length ? (
+            {state.loaded && state.data.species?.versions.length ? (
               state.data?.species?.versions.map(version => (
                 <Fragment key={version.name}>
                   <Heading type={Types.H2} size={Types.H6} capitalize>{version.name}</Heading>
                   <p>{version.description}</p>
                 </Fragment>
               ))
-            ) : null}
+            ) : <p>-</p>}
           </CardContent>
         </Card>
 
-        {state.loaded && state.data.evolutionChain ? (
-          <Card shadow>
-            <CardHeader>
-              <Heading type={Types.H1} size={Types.H5}>Evolution Chain</Heading>
-            </CardHeader>
-            {state.loading ? (
-              <Loading />
-            ) : null}
-            <CardContent>
-              {state.data.evolutionChain.length ? (
-                <EvolutionChain ids={state.data.evolutionChain} />
-              ) : '-'}
-            </CardContent>
-          </Card>
-        ) : null}
+        <Card shadow>
+          <CardHeader>
+            <Heading type={Types.H1} size={Types.H5}>Evolution Chain</Heading>
+          </CardHeader>
+          <CardContent>
+            {state.loaded && state.data?.evolutionChain?.length ? (
+              <EvolutionChain ids={state.data.evolutionChain} />
+            ) : '-'}
+          </CardContent>
+        </Card>
       </article>
     </main>
   );

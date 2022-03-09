@@ -17,6 +17,7 @@
 }
 
 .Pokemon__content {
+  position: relative;
   padding: var(--default-spacing);
 
   & > .Card {
