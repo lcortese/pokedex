@@ -108,7 +108,6 @@ export const loadItem = (id: number) => async (dispatch: Dispatch) => {
     const item = await PokemonApi.get(id);
     dispatch(setItemData({ id, value: item }));
     dispatch(setItemLoaded({ id, value: true }));
-    return item;
   } catch (e) {
     dispatch(setItemError({ id, value: e.message }));
   } finally {
@@ -128,8 +127,6 @@ export const loadItems = (list: number[]) => (dispatch: Dispatch) => {
 };
 
 export const loadItemSpecies = (id: number) => async (dispatch: Dispatch, getState: Function) => {
-  dispatch(setItemLoading({ id, value: true }));
-
   try {
     const { items } = getState().pokemon;
     const { data } = items[id];
@@ -143,15 +140,11 @@ export const loadItemSpecies = (id: number) => async (dispatch: Dispatch, getSta
     }));
   } catch (e) {
     dispatch(setItemError({ id, value: e.message }));
-  } finally {
-    dispatch(setItemLoading({ id, value: false }));
   }
 };
 
 
 export const loadEvolutionChain = (id: number) => async (dispatch: Dispatch, getState: Function) => {
-  dispatch(setItemLoading({ id, value: true }));
-
   try {
     const { items } = getState().pokemon;
     const { data } = items[id];
@@ -173,8 +166,6 @@ export const loadEvolutionChain = (id: number) => async (dispatch: Dispatch, get
     }));
   } catch (e) {
     dispatch(setItemError({ id, value: e.message }));
-  } finally {
-    dispatch(setItemLoading({ id, value: false }));
   }
 };
 

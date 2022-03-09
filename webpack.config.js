@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const postcssPresetEnv = require('postcss-preset-env');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = (env, argv) => {
   const develop = argv.mode === 'development';
@@ -24,6 +25,7 @@ module.exports = (env, argv) => {
     output: {
       filename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist'),
+      clean: true,
     },
     module: {
       rules: [{
@@ -56,6 +58,11 @@ module.exports = (env, argv) => {
       }),
       develop && new ForkTsCheckerWebpackPlugin(),
       !develop && new MiniCssExtractPlugin(),
+      !develop && new CopyPlugin({
+        patterns: [
+          { from: "public" },
+        ],
+      }),
     ].filter(Boolean),
   };
 };
