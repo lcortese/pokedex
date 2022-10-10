@@ -18,14 +18,14 @@ type Props = {
 const Item = ({ id }: Props) => {
   const pokemonState = useAppSelector((rootState) => rootState.pokemon);
   const item = pokemonState.items[id];
-  const callout = useRef(null);
+  const callout = useRef<HTMLAnchorElement>();
 
   const clickHandler = () => {
     callout.current.click();
   };
 
   const auxClickHandler = () => {
-    const auxClick = new MouseEvent('click', { 'button': 1, 'which': 2 });
+    const auxClick = new MouseEvent('click', { ctrlKey: true });
     callout.current.dispatchEvent(auxClick);
   };
 
