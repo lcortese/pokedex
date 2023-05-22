@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction, Dispatch } from '@reduxjs/toolkit';
 
-import PokemonApi from '../apis/pokemon';
-import PokemonSpeciesApi, { Species } from '../apis/pokemonSpecies';
-import EvolutionChainApi from '../apis/evolutionChain';
+import { get } from '../services/pokemon';
+import { get as getSpecies } from '../services/pokemonSpecies';
+import type { Species } from '../services/pokemonSpecies';
+import { get as getEvolucionChain } from '../services/evolutionChain';
 
 type Pokemon = {
   id: number,
@@ -105,7 +106,7 @@ export const loadItem = (id: number) => async (dispatch: Dispatch) => {
   dispatch(setItemLoading({ id, value: true }));
 
   try {
-    const item = await PokemonApi.get(id);
+    const item = await get(id);
     dispatch(setItemData({ id, value: item }));
     dispatch(setItemLoaded({ id, value: true }));
   } catch (e) {
@@ -130,7 +131,7 @@ export const loadItemSpecies = (id: number) => async (dispatch: Dispatch, getSta
   try {
     const { items } = getState().pokemon;
     const { data } = items[id];
-    const species = await PokemonSpeciesApi.get(data.speciesName);
+    const species = await getSpecies(data.speciesName);
 
     dispatch(setItemData({
       id,
@@ -148,7 +149,7 @@ export const loadEvolutionChain = (id: number) => async (dispatch: Dispatch, get
   try {
     const { items } = getState().pokemon;
     const { data } = items[id];
-    const evolutionChain = await EvolutionChainApi.get(data.species.evolutionChainId);
+    const evolutionChain = await getEvolucionChain(data.species.evolutionChainId);
 
     const siblings = evolutionChain.filter(pokemonId => pokemonId !== id);
 

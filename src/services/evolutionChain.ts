@@ -25,10 +25,8 @@ const parseItems = (data: Chain): number[] => {
   return [id, ...ids];
 };
 
-export default new class EvolutionChainApi {
-  get(id: string): Promise<number[]> {
-    return fetch(buildUrl(id))
-      .then(response => response.json())
-      .then((response: EvolutionChainResponse) => parseItems(response.chain));
-  }
+export const get = (id: string) => {
+  return fetch(buildUrl(id))
+    .then(response => response.json())
+    .then((response: EvolutionChainResponse) => parseItems(response.chain));
 };

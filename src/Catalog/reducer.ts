@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, Dispatch } from '@reduxjs/toolkit';
 
-import PokemonApi, { ListPayload } from '../apis/pokemon';
+import { getList } from '../services/pokemon';
+import type { ListPayload } from '../services/pokemon';
 
 type Range = {
   min: number
@@ -73,7 +74,7 @@ const fetch = async ({ offset, limit }: ListPayload, dispatch: Dispatch, useStat
   dispatch(setLoading(true));
 
   try {
-    const response = await PokemonApi.getList({ offset, limit });
+    const response = await getList({ offset, limit });
     dispatch(setTotal(response.total));
 
     const { min, max } = useState().catalog.range;
