@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useSelector } from '../../../store/hooks';
+import usePokemon from '../../../Pokemon/hooks/usePokemon';
 import Heading, { Types } from '../../../components/Heading';
 import Card, { CardHeader, CardContent, CardFooter } from '../../../components/Card';
 import Loading from '../../../components/Loading';
@@ -16,8 +16,8 @@ type Props = {
 };
 
 const Item = ({ id }: Props) => {
-  const pokemonState = useSelector((rootState) => rootState.pokemon);
-  const item = pokemonState.items[id];
+  const { items } = usePokemon();
+  const item = items[id];
   const callout = useRef<HTMLAnchorElement>();
 
   const clickHandler = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { WrapperProps } from '../../types';
+import { WrapperProps } from '../@types';
 
 import './HeaderPage.css';
 

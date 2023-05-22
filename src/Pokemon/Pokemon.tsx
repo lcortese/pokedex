@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { useSelector, useDispatch } from '../store/hooks';
+import usePokemon from './hooks/usePokemon';
 import HeaderPage from '../components/HeaderPage';
 import Heading, { Types } from '../components/Heading';
 import Card, { CardHeader, CardContent } from '../components/Card';
@@ -12,24 +12,27 @@ import './Pokemon.css';
 
 import BackButton from './components/BackButton';
 import EvolutionChain from './components/EvolutionChain';
-import { loadItem, loadItemSpecies, loadEvolutionChain } from './reducer';
 
 const Pokemon = () => {
-  const { items } = useSelector((rootState) => rootState.pokemon);
-  const dispatch = useDispatch();
+  const { items, loadItem, loadItemSpecies, loadEvolutionChain } = usePokemon();
+
   const navigate = useNavigate();
   const id = parseInt(useParams().id);
   const state = items[id];
 
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    (async () => {
-      await dispatch(loadItem(id));
-      await dispatch(loadItemSpecies(id));
-      dispatch(loadEvolutionChain(id));
-    })();
+    loadItem(id);
   }, [id]);
+
+  useEffect(() => {
+    if (state?.loaded && !state.data.species) {
+      loadItemSpecies(id);
+    }
+    if (state?.loaded && state.data.species && !state.data.evolutionChain) {
+      loadEvolutionChain(id);
+    }
+  }, [state]);
 
   if (!state) {
     return null;

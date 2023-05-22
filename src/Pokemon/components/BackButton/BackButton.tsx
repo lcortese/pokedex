@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PresentationalProps } from '../../../types';
+import { PresentationalProps } from '../../../components/@types';
 
 import BackIcon from '../../../components/BackIcon';
 

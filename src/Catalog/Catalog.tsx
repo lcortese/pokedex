@@ -1,26 +1,25 @@
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { useSelector, useDispatch } from '../store/hooks';
-
-import { loadItems } from '../Pokemon/reducer';
 import Loading from '../components/Loading';
+import usePokemon from '../Pokemon/hooks/usePokemon';
 
 import './Catalog.css';
 
 import Header from './components/Header';
 import Item from './components/Item';
 import PaginationButton from './components/PaginationButton';
-import { load, loadPrev, loadNext } from './reducer';
+
+import useCatalog from './hooks/useCatalog';
 
 const ITEMS_PER_PAGE = 20;
 
 const Catalog = () => {
-  const state = useSelector((rootState) => rootState.catalog);
-  const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { items, total, loading, loaded, range, error, load, loadPrev, loadNext } = useCatalog();
+  const { loadItems } = usePokemon();
 
-  const offset = parseInt(searchParams.get('offset'));
+  const offset = parseInt(searchParams.get('offset')) || 0;
 
   /*
    * Load data
@@ -28,30 +27,28 @@ const Catalog = () => {
   useEffect(() => {
     let action;
 
-    if (!state.loaded) {
+    if (!loaded) {
       action = load;
     } else {
-      if (offset + ITEMS_PER_PAGE > state.range.max) {
+      if (offset + ITEMS_PER_PAGE > range.max) {
         action = loadNext;
       } else
-      if (offset < state.range.min) {
+      if (offset < range.min) {
         action = loadPrev;
       }
     }
 
     if (action) {
-      dispatch(action({
-        offset: isNaN(offset) ? 0 : offset,
+      action({
+        offset,
         limit: ITEMS_PER_PAGE,
-      })).then(items => {
-        dispatch(loadItems(items));
-      });
+      }).then(loadItems);
     }
   }, [offset]);
 
   const goToPrev = () => {
     setSearchParams({
-      offset: (Math.max(state.range.min - ITEMS_PER_PAGE, 0)).toString(),
+      offset: (Math.max(range.min - ITEMS_PER_PAGE, 0)).toString(),
     }, {
       replace: true,
     });
@@ -59,7 +56,7 @@ const Catalog = () => {
 
   const goToNext = () => {
     setSearchParams({
-      offset: state.range.max.toString(),
+      offset: range.max.toString(),
     }, {
       replace: true,
     });
@@ -69,37 +66,37 @@ const Catalog = () => {
     <main className="Catalog">
       <Header />
       <div className="Catalog__content">
-        {state.loading ? (
+        {loading ? (
           <Loading />
         ) : null}
 
-        {state.error ? (
-          <div>Error: {state.error}</div>
+        {error ? (
+          <div>Error: {error}</div>
         ) : null}
 
-        {state.loaded && !state.items.length ? (
+        {loaded && !items.length ? (
           <div>No results</div>
         ) : null}
 
-        {state.loaded && state.items.length ? (
+        {loaded && items.length ? (
           <>
 
-          {state.range.min > 0 ? (
-            <PaginationButton onClick={goToPrev} disabled={state.loading}>
+          {range.min > 0 ? (
+            <PaginationButton onClick={goToPrev} disabled={loading}>
               Load Prev
             </PaginationButton>
           ) : null}
 
           <ul className="Items">
-            {state.items.map((id: number) => (
+            {items.map((id: number) => (
               <li key={id}>
                 <Item id={id} />
               </li>
             ))}
           </ul>
 
-          {state.range.max < state.total ? (
-            <PaginationButton onClick={goToNext} disabled={state.loading}>
+          {range.max < total ? (
+            <PaginationButton onClick={goToNext} disabled={loading}>
               Load Next
             </PaginationButton>
           ) : null}
