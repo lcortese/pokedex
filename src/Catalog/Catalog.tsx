@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch } from '../hooks';
+import { useSelector, useDispatch } from '../store/hooks';
 
 import { loadItems } from '../Pokemon/reducer';
 import Loading from '../components/Loading';
@@ -16,8 +16,8 @@ import { load, loadPrev, loadNext } from './reducer';
 const ITEMS_PER_PAGE = 20;
 
 const Catalog = () => {
-  const state = useAppSelector((rootState) => rootState.catalog);
-  const dispatch = useAppDispatch();
+  const state = useSelector((rootState) => rootState.catalog);
+  const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const offset = parseInt(searchParams.get('offset'));

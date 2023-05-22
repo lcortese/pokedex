@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useAppSelector } from '../../../hooks';
+import { useSelector } from '../../../store/hooks';
 import Heading, { Types } from '../../../components/Heading';
 import Card, { CardHeader, CardContent, CardFooter } from '../../../components/Card';
 import Loading from '../../../components/Loading';
@@ -16,7 +16,7 @@ type Props = {
 };
 
 const Item = ({ id }: Props) => {
-  const pokemonState = useAppSelector((rootState) => rootState.pokemon);
+  const pokemonState = useSelector((rootState) => rootState.pokemon);
   const item = pokemonState.items[id];
   const callout = useRef<HTMLAnchorElement>();
 

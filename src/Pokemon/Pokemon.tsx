@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch } from '../hooks';
+import { useSelector, useDispatch } from '../store/hooks';
 import HeaderPage from '../components/HeaderPage';
 import Heading, { Types } from '../components/Heading';
 import Card, { CardHeader, CardContent } from '../components/Card';
@@ -15,8 +15,8 @@ import EvolutionChain from './components/EvolutionChain';
 import { loadItem, loadItemSpecies, loadEvolutionChain } from './reducer';
 
 const Pokemon = () => {
-  const { items } = useAppSelector((rootState) => rootState.pokemon);
-  const dispatch = useAppDispatch();
+  const { items } = useSelector((rootState) => rootState.pokemon);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const id = parseInt(useParams().id);
   const state = items[id];
