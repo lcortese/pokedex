@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PresentationalProps } from '../types';
+import { PresentationalProps } from './@types';
 
 const BackIcon = ({ className }: PresentationalProps) => (
   <svg className={className} x="0px" y="0px" viewBox="0 0 219.151 219.151">

@@ -1,5 +1,5 @@
-# Karvi Challenge
-Challenge for Karvi job interview.
+# Pokedex Challenge
+Technical Challenge for job interview.
 
 **Autor:** Leandro Cortese
 **Email:** [leandrocortese@gmail.com](mailto:leandrocortese@gmail.com "leandrocortese@gmail.com")
@@ -14,8 +14,8 @@ Follow the next steps to intilizate the app:
 
 #### 1. Clone Repository and go to the folder
 ```bash
-$ git clone git@gitlab.com:AriX/karvi-challenge.git
-cd karvi-challenge
+$ git clone git@gitlab.com:AriX/pokedex.git
+cd pokedex
 ```
 
 #### 2. Install dependencies

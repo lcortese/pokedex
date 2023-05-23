@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Square.css';
 
-import { WrapperProps } from '../../types';
+import { WrapperProps } from '../@types';
 
 const Square = ({ children }: WrapperProps) => (
   <div className="Square">

@@ -66,28 +66,26 @@ type Pokemon = {
   speciesName: string,
 };
 
-export default new class PokemonApi {
-  getList(data: ListPayload): Promise<List> {
-    return fetch(buildUrl(data))
-      .then(response => response.json())
-      .then((response: ListResponse) => ({
-        items: response.results.map((result) => ({
-          id: extractId(result.url),
-          name: result.name,
-        })),
-        total: response.count,
-      }));
-  }
+export const getList = (data: ListPayload): Promise<List> => {
+  return fetch(buildUrl(data))
+    .then(response => response.json())
+    .then((response: ListResponse) => ({
+      items: response.results.map((result) => ({
+        id: extractId(result.url),
+        name: result.name,
+      })),
+      total: response.count,
+    }));
+};
 
-  get(id: number): Promise<Pokemon> {
-    return fetch(`${BASE_URL}/${id}`)
-      .then(response => response.json())
-      .then((response: ItemResponse) => ({
-        id: response.id,
-        name: response.name.replace(/-/g, ' '),
-        picture: response.sprites.other.dream_world.front_default || response.sprites.front_default || response.sprites.front_shiny,
-        types: response.types.map((item: any) => item.type.name),
-        speciesName: response.species.name,
-      }));
-  }
+export const get = (id: number): Promise<Pokemon> => {
+  return fetch(`${BASE_URL}/${id}`)
+    .then(response => response.json())
+    .then((response: ItemResponse) => ({
+      id: response.id,
+      name: response.name.replace(/-/g, ' '),
+      picture: response.sprites.other.dream_world.front_default || response.sprites.front_default || response.sprites.front_shiny,
+      types: response.types.map((item: any) => item.type.name),
+      speciesName: response.species.name,
+    }));
 };

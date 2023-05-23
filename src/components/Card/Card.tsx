@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Card.css';
 
-import { WrapperProps } from '../../types';
+import { WrapperProps } from '../@types';
 
 type CardProps = WrapperProps & {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void,
