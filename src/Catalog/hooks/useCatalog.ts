@@ -6,7 +6,7 @@ type Range = {
   max: number
 };
 
-export type Store = {
+export type State = {
   loading: boolean,
   loaded: boolean,
   items: number[],
@@ -15,19 +15,14 @@ export type Store = {
   error?: string,
 };
 
-type Mutators = {
-  setLoading: (value: Store['loading']) => void,
-  setLoaded: (value: Store['loaded']) => void,
-  setTotal: (value: Store['total']) => void,
-  setRange: (value: Store['range']) => void,
-  setItems: (value: Store['items']) => void,
-  unshiftItems: (value: Store['items']) => void,
-  pushItems: (value: Store['items']) => void,
-  setError: (value: Store['error']) => void,
+type Actions = {
+  load: (value: ListPayload) => Promise<State['items']>,
+  loadPrev: (value: ListPayload) => Promise<State['items']>,
+  loadNext: (value: ListPayload) => Promise<State['items']>,
 };
   
 
-const initialState: Store = {
+const DEFAULT_STATE: State = {
   loading: false,
   loaded: false,
   items: [],
@@ -39,100 +34,87 @@ const initialState: Store = {
   error: undefined,
 };
 
-const useCatalog = create<Store & Mutators>((set) => ({
-  ...initialState,
-  setLoading: (value) => set({ loading: value }),
-  setLoaded: (value) => set({ loaded: value }),
-  setTotal: (value) => set({ total: value }),
-  setRange: (value) => set({ range: value }),
-  setItems: (value) => set({ items: value }),
-  unshiftItems: (value) => set((state) => {
-    const items = state.items.reduce((collector, item) => {
-      return !collector.includes(item)
-        ? [...collector, item]
-        : collector;
-    }, value);
+const unshiftItems = (items: State['items'], newItems: State['items']) =>
+  items.reduce((collector, item) => {
+    return !collector.includes(item)
+      ? [...collector, item]
+      : collector;
+  }, newItems);
 
-    return { items };
-  }),
-  pushItems: (value) => set(state => {
-    const items = value.reduce((collector, item) => {
-      return !collector.includes(item)
-        ? [...collector, item]
-        : collector;
-    }, state.items);
+const pushItems = (items: State['items'], newItems: State['items']) =>
+  newItems.reduce((collector, item) => {
+    return !collector.includes(item)
+      ? [...collector, item]
+      : collector;
+  }, items);
+  
 
-    return { items };
-  }),
-  setError: (value) => set({ error: value }),
-}));
-
-export default () => {
-  const { setLoading, setTotal, setRange, setLoaded, setItems, setError, unshiftItems, pushItems, ...state } = useCatalog();
-
+const useCatalog = create<State & Actions>((set, get) => {
   const fetch = async ({ offset, limit }: ListPayload) => {
-    setLoading(true);
+    const { range } = get();
+    set({ loading: true });
       
     try {
       const response = await getList({ offset, limit });
-      setTotal(response.total);
+      set({ total: response.total });
       
-      const { min, max } = state.range;
+      const { min, max } = range;
       
-      (setRange({
-        min: Math.min(min, offset),
-        max: Math.max(max, offset + limit),
-      }));
+      set({
+        range: {
+          min: Math.min(min, offset),
+          max: Math.max(max, offset + limit),
+        },
+      });
       
       return response.items.map(item => item.id);
     } catch (e) {
       throw e;
     } finally {
-      setLoading(false);
-    }
-  };
-      
-  const load = async (range: ListPayload) => {
-    setLoaded(false);
-    setRange(initialState.range);
-      
-    try {
-      const items = await fetch(range);
-      setItems(items);
-      setLoaded(true);
-      return items;
-    } catch (e) {
-      setError(e.message);
-      throw e;
-    }
-  };
-      
-  const loadPrev = async (range: ListPayload) => {
-    try {
-      const items = await fetch(range);
-      unshiftItems(items);
-      return items;
-    } catch (e) {
-      setError(e.message);
-      throw e;
-    }
-  };
-      
-  const loadNext = async (range: ListPayload) => {
-    try {
-      const items = await fetch(range);
-      pushItems(items);
-      return items;
-    } catch (e) {
-      setError(e.message);
-      throw e;
+      set({ loading: false });
     }
   };
 
   return {
-    ...state,
-    load,
-    loadNext,
-    loadPrev,
+    ...DEFAULT_STATE,
+    load: async (range: ListPayload) => {
+      set({ loaded: false });
+      set({ range: DEFAULT_STATE.range });
+        
+      try {
+        const items = await fetch(range);
+        set({ items });
+        set({ loaded: true });
+        return items;
+      } catch (e) {
+        set({ error: e.message });
+        throw e;
+      }
+    },
+    loadPrev: async (range: ListPayload) => {
+      const { items } = get();
+      try {
+        const newItems = await fetch(range);
+        set({ items: unshiftItems(items, newItems) });
+        return newItems;
+      } catch (e) {
+        set({ error: e.message });
+        throw e;
+      }
+    },
+    loadNext: async (range: ListPayload) => {
+      const { items } = get();
+      try {
+        const newItems = await fetch(range);
+        set({ items: pushItems(items, newItems) });
+        return newItems;
+      } catch (e) {
+        set({ error: e.message });
+        throw e;
+      }
+    },
   };
-};
+
+});
+
+export default useCatalog;
