@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const postcssPresetEnv = require('postcss-preset-env');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyPlugin = require("copy-webpack-plugin");
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
   const develop = argv.mode === 'development';
@@ -60,7 +60,7 @@ module.exports = (env, argv) => {
       !develop && new MiniCssExtractPlugin(),
       !develop && new CopyPlugin({
         patterns: [
-          { from: "public" },
+          { from: 'public' },
         ],
       }),
     ].filter(Boolean),

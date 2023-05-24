@@ -68,8 +68,6 @@ const useCatalog = create<State & Actions>((set, get) => {
       });
       
       return response.items.map(item => item.id);
-    } catch (e) {
-      throw e;
     } finally {
       set({ loading: false });
     }

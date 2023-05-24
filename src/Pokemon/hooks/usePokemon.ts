@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Species } from '../../services/pokemonSpecies';
+import type { PokemonSpecies } from '../../services/pokemonSpecies';
 import { get as getPokemon } from '../../services/pokemon';
 import { get as getSpecies } from '../../services/pokemonSpecies';
 import { get as getEvolucionChain } from '../../services/evolutionChain';
@@ -9,7 +9,7 @@ type Pokemon = {
   name?: string,
   picture?: string,
   types?: string[],
-  species?: Species,
+  species?: PokemonSpecies,
   speciesName?: string,
   /*
      * NOTE:
@@ -31,10 +31,10 @@ type State = {
 };
 
 type Actions = {
-  loadItem: (id: number) => void,
-  loadItems: (ids: number[]) => void,
-  loadItemSpecies: (id: number) => void,
-  loadItemEvolutionChain: (id: number) => void
+  loadItem: (id: Pokemon['id']) => void,
+  loadItems: (ids: Pokemon['id'][]) => void,
+  loadItemSpecies: (id: Pokemon['id']) => void,
+  loadItemEvolutionChain: (id: Pokemon['id']) => void
 };
 
 const DEFAULT_ITEM_STATE = {

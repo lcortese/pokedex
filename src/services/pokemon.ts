@@ -4,7 +4,7 @@ import { extractId } from './helpers';
 
 const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
 
-const buildUrl = (query?: Object) => {
+const buildUrl = (query?: Record<string, unknown>) => {
   return `${BASE_URL}${query ? '?' + queryString.stringify(query) : ''}`;
 };
 

@@ -6,7 +6,7 @@ const buildUrl = (param: string) => {
   return `${BASE_URL}/${param}`;
 };
 
-export type SpeciesResponse = {
+export type PokemonSpeciesDto = {
   name: string,
   habitat?: {
     name: string
@@ -26,7 +26,7 @@ export type SpeciesResponse = {
   url: string,
 };
 
-export type Species = {
+export type PokemonSpecies = {
   name: string,
   habitat?: string,
   versions: Array<{
@@ -36,11 +36,11 @@ export type Species = {
   evolutionChainId: number
 };
 
-export const get = (name: string) => {
+export const get = (name: string): Promise<PokemonSpecies> => {
   return fetch(buildUrl(name))
     .then(response => response.json())
-    .then((response: SpeciesResponse) => {
-      return <Species>{
+    .then((response: PokemonSpeciesDto) => {
+      return {
         name: response.name,
         habitat: response.habitat?.name,
         versions: response.flavor_text_entries.reduce((collector, item) => {
