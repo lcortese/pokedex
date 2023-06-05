@@ -1,12 +1,5 @@
-import queryString from 'query-string';
-
+import Api from './Api';
 import { extractId } from './helpers';
-
-const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
-
-const buildUrl = (query?: Record<string, unknown>) => {
-  return `${BASE_URL}${query ? '?' + queryString.stringify(query) : ''}`;
-};
 
 export type ListPayload = {
   offset: number,
@@ -58,7 +51,7 @@ type ItemResponse = {
   }
 };
 
-type Pokemon = {
+export type Pokemon = {
   id: number,
   name: string,
   picture: string,
@@ -66,26 +59,35 @@ type Pokemon = {
   speciesName: string,
 };
 
-export const getList = (data: ListPayload): Promise<List> => {
-  return fetch(buildUrl(data))
-    .then(response => response.json())
-    .then((response: ListResponse) => ({
-      items: response.results.map((result) => ({
-        id: extractId(result.url),
-        name: result.name,
-      })),
-      total: response.count,
-    }));
+const pokemonApi =  new Api({
+  hostname: 'pokeapi.co',
+  pathname: 'api/v2/pokemon',
+});
+
+export const getList = async (range: ListPayload): Promise<List> => {
+  const response =  await pokemonApi.get<ListResponse>({
+    query: range,
+  });
+
+  return {
+    items: response.results.map((result) => ({
+      id: extractId(result.url),
+      name: result.name,
+    })),
+    total: response.count,
+  };
 };
 
-export const get = (id: number): Promise<Pokemon> => {
-  return fetch(`${BASE_URL}/${id}`)
-    .then(response => response.json())
-    .then((response: ItemResponse) => ({
-      id: response.id,
-      name: response.name.replace(/-/g, ' '),
-      picture: response.sprites.other.dream_world.front_default || response.sprites.front_default || response.sprites.front_shiny,
-      types: response.types.map((item: any) => item.type.name),
-      speciesName: response.species.name,
-    }));
+export const get = async (id: number): Promise<Pokemon> => {
+  const response = await pokemonApi.get<ItemResponse>({
+    pathname: id,
+  });
+
+  return {
+    id: response.id,
+    name: response.name.replace(/-/g, ' '),
+    picture: response.sprites.other.dream_world.front_default || response.sprites.front_default || response.sprites.front_shiny,
+    types: response.types.map((item: any) => item.type.name),
+    speciesName: response.species.name,
+  };
 };
