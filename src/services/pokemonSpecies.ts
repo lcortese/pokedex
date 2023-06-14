@@ -1,12 +1,7 @@
 import { extractId } from './helpers';
+import Api from './Api';
 
-const BASE_URL = 'https://pokeapi.co/api/v2/pokemon-species';
-
-const buildUrl = (param: string) => {
-  return `${BASE_URL}/${param}`;
-};
-
-export type SpeciesResponse = {
+export type PokemonSpeciesDto = {
   name: string,
   habitat?: {
     name: string
@@ -26,7 +21,7 @@ export type SpeciesResponse = {
   url: string,
 };
 
-export type Species = {
+export type PokemonSpecies = {
   name: string,
   habitat?: string,
   versions: Array<{
@@ -36,24 +31,30 @@ export type Species = {
   evolutionChainId: number
 };
 
-export const get = (name: string) => {
-  return fetch(buildUrl(name))
-    .then(response => response.json())
-    .then((response: SpeciesResponse) => {
-      return <Species>{
-        name: response.name,
-        habitat: response.habitat?.name,
-        versions: response.flavor_text_entries.reduce((collector, item) => {
-          if (item.language.name === 'en') {
-            collector.push({
-              name: item.version.name,
-              description: item.flavor_text,
-            });
-          }
-          return collector;
-        }, []),
-        evolutionChainId: extractId(response.evolution_chain.url),
-      };
-    });
+const pokemonSpeciesApi = new Api({
+  hostname: 'pokeapi.co',
+  pathname: 'api/v2/pokemon-species',
+});
+
+
+export const get = async (name: string): Promise<PokemonSpecies> => {
+  const response = await pokemonSpeciesApi.get<PokemonSpeciesDto>({
+    pathname: name,
+  });
+
+  return {
+    name: response.name,
+    habitat: response.habitat?.name,
+    versions: response.flavor_text_entries.reduce((collector, item) => {
+      if (item.language.name === 'en') {
+        collector.push({
+          name: item.version.name,
+          description: item.flavor_text,
+        });
+      }
+      return collector;
+    }, [] as PokemonSpecies['versions']),
+    evolutionChainId: extractId(response.evolution_chain.url),
+  };
 };
 

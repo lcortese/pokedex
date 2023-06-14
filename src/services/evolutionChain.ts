@@ -1,6 +1,6 @@
 const BASE_URL = 'https://pokeapi.co/api/v2/evolution-chain';
 
-import { SpeciesResponse } from './pokemonSpecies';
+import { PokemonSpeciesDto } from './pokemonSpecies';
 import { extractId } from './helpers';
 
 const buildUrl = (param: string) => {
@@ -8,7 +8,7 @@ const buildUrl = (param: string) => {
 };
 
 type Chain = {
-  species: SpeciesResponse,
+  species: PokemonSpeciesDto,
   evolves_to: Chain[]
 };
 

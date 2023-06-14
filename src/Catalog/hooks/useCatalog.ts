@@ -66,10 +66,13 @@ const useCatalog = create<State & Actions>((set, get) => {
           max: Math.max(max, offset + limit),
         },
       });
-      
+
       return response.items.map(item => item.id);
     } catch (e) {
-      throw e;
+      if (e instanceof Error) {
+        set({ error: e.message });
+      }
+      return [];
     } finally {
       set({ loading: false });
     }
@@ -81,37 +84,22 @@ const useCatalog = create<State & Actions>((set, get) => {
       set({ loaded: false });
       set({ range: DEFAULT_STATE.range });
         
-      try {
-        const items = await fetch(range);
-        set({ items });
-        set({ loaded: true });
-        return items;
-      } catch (e) {
-        set({ error: e.message });
-        throw e;
-      }
+      const items = await fetch(range);
+      set({ items });
+      set({ loaded: true });
+      return items;
     },
     loadPrev: async (range: ListPayload) => {
       const { items } = get();
-      try {
-        const newItems = await fetch(range);
-        set({ items: unshiftItems(items, newItems) });
-        return newItems;
-      } catch (e) {
-        set({ error: e.message });
-        throw e;
-      }
+      const newItems = await fetch(range);
+      set({ items: unshiftItems(items, newItems) });
+      return newItems;
     },
     loadNext: async (range: ListPayload) => {
       const { items } = get();
-      try {
-        const newItems = await fetch(range);
-        set({ items: pushItems(items, newItems) });
-        return newItems;
-      } catch (e) {
-        set({ error: e.message });
-        throw e;
-      }
+      const newItems = await fetch(range);
+      set({ items: pushItems(items, newItems) });
+      return newItems;
     },
   };
 

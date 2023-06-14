@@ -1,40 +1,31 @@
 import { create } from 'zustand';
-import type { Species } from '../../services/pokemonSpecies';
+import type { PokemonSpecies } from '../../services/pokemonSpecies';
 import { get as getPokemon } from '../../services/pokemon';
+import type { Pokemon } from '../../services/pokemon';
 import { get as getSpecies } from '../../services/pokemonSpecies';
 import { get as getEvolucionChain } from '../../services/evolutionChain';
 
-type Pokemon = {
-  id: number,
-  name?: string,
-  picture?: string,
-  types?: string[],
-  species?: Species,
-  speciesName?: string,
-  /*
-     * NOTE:
-     * The evolutions chains can has his own store and link with pokemon store through the pokemon id.
-     * But considering the size of this app I decided to avoid create a new store.
-     */
-  evolutionChain?: number[]
+type ItemData = Pokemon & {
+  species?: PokemonSpecies,
+  evolutionChain?: Pokemon['id'][]
 };
   
 type Item = {
   loaded: boolean,
   loading: boolean,
-  data: Pokemon,
+  data: ItemData,
   error?: string
 };
   
 type State = {
-  items: Record<number, Item>,
+  items: Record<Pokemon['id'], Item>,
 };
 
 type Actions = {
-  loadItem: (id: number) => void,
-  loadItems: (ids: number[]) => void,
-  loadItemSpecies: (id: number) => void,
-  loadItemEvolutionChain: (id: number) => void
+  loadItem: (id: ItemData['id']) => void,
+  loadItems: (ids: ItemData['id'][]) => void,
+  loadItemSpecies: (id: ItemData['id']) => void,
+  loadItemEvolutionChain: (id: ItemData['id']) => void
 };
 
 const DEFAULT_ITEM_STATE = {
@@ -47,137 +38,140 @@ const DEFAULT_STATE: State = {
   items: {},
 };
 
+const usePokemon = create<State & Actions>((set, get) => {
+  // mutators
+  const setItems = (ids: Pokemon['id'][]) => set((state: State) => {
+    const items = ids.reduce<State['items']>((collector, id) => {
+      const currentItem = state.items[id];
 
-// mutators
-const setItems = (ids: number[]) => (state: State) => {
-  const items = ids.reduce((collector: State['items'], id: number) => {
-    const currentItem = state.items[id];
+      return {
+        ...collector,
+        [id]: {
+          ...DEFAULT_ITEM_STATE,
+          ...currentItem,
+          data: {
+            ...currentItem?.data,
+            id,
+          },
+        },
+      };
+    }, {});
 
     return {
-      ...collector,
-      [id]: {
-        ...DEFAULT_ITEM_STATE,
-        ...currentItem,
-        data: {
-          ...currentItem?.data,
-          id,
-        },
+      items: {
+        ...state.items,
+        ...items,
       },
     };
-  }, {});
+  });
 
-  return {
+  const setItemLoaded = (id: Pokemon['id'], loaded: boolean) => set((state: State) => ({
     items: {
       ...state.items,
-      ...items,
-    },
-  };
-};
-
-const setItemLoaded = (id: number, loaded: boolean) => (state: State) => ({
-  items: {
-    ...state.items,
-    [id]: {
-      ...state.items[id],
-      loaded,
-    },
-  },
-});
-
-const setItemLoading = (id: number, loading: boolean) => (state: State) => ({
-  items: {
-    ...state.items,
-    [id]: {
-      ...state.items[id],
-      loading,
-    },
-  },
-});
-
-const setItemData = (id: number, data: Partial<Item['data']>) => (state: State) => ({
-  items: {
-    ...state.items,
-    [id]: {
-      ...state.items[id],
-      data: {
-        ...state.items[id].data,
-        ...data,
+      [id]: {
+        ...state.items[id],
+        loaded,
       },
     },
-  },
-});
+  }));
 
-const setItemError = (id: number, error: string) => (state: State) => ({
-  items: {
-    ...state.items,
-    [id]: {
-      ...state.items[id],
-      error,
+  const setItemLoading = (id: Pokemon['id'], loading: boolean) => set((state: State) => ({
+    items: {
+      ...state.items,
+      [id]: {
+        ...state.items[id],
+        loading,
+      },
     },
-  },
-});
+  }));
+
+  const setItemData = (id: Pokemon['id'], data: Partial<Item['data']>) => set((state: State) => ({
+    items: {
+      ...state.items,
+      [id]: {
+        ...state.items[id],
+        data: {
+          ...state.items[id].data,
+          ...data,
+        },
+      },
+    },
+  }));
+
+  const setItemError = (id: Pokemon['id'], error: string) => set((state: State) => ({
+    items: {
+      ...state.items,
+      [id]: {
+        ...state.items[id],
+        error,
+      },
+    },
+  }));
+
+  return {
+    ...DEFAULT_STATE,
+    loadItem: async (id) => {
+      setItemLoading(id, true);
+      try {
+        const item = await getPokemon(id);
+        setItemData(id, item);
+        setItemLoaded(id, true);
+      } catch (e) {
+        setItemError(id, `Unable to load pokemon: ${e instanceof Error ? e.message : '-'}`);
+      } finally {
+        setItemLoading(id, false);
+      }
+    },
   
-
-const usePokemon = create<State & Actions>((set, get) => ({
-  ...DEFAULT_STATE,
-  loadItem: async (id) => {
-    set(setItemLoading(id, true ));
-      
-    try {
-      const item = await getPokemon(id);
-      set(setItemData(id, item));
-      set(setItemLoaded(id, true));
-    } catch (e) {
-      set(setItemError(id, e.message));
-    } finally {
-      set(setItemLoading(id, false));
-    }
-  },
-
-  loadItems: (list) => {
-    const { loadItem } = get();
-    set(setItems(list));
-      
-    /*
-    * Load data for each item
-    */
-    list.forEach((id: number) => {
-      loadItem(id);
-    });
-  },
-  loadItemSpecies: async (id) => {
-    const { items } = get();
-    try {
-      const item = items[id];
-      const species = await getSpecies(item.data.speciesName);
-      set(setItemData(id, { species }));
-    } catch (e) {
-      set(setItemError(id, `Unable to load species: ${e.message}`));
-    }
-  },
-  loadItemEvolutionChain: async (id) =>  {
-    const { items, loadItem } = get();
-    try {
-      const item = items[id];
-      const evolutionChain = await getEvolucionChain(`${item.data.species.evolutionChainId}`);
-      const siblings = evolutionChain.filter(pokemonId => pokemonId !== id);
-      
-      set(setItems(siblings));
-      
-      await Promise.all(siblings.map((siblingId) => 
-        loadItem(siblingId),
-      ));
-      
-      set(setItemData(id, { evolutionChain }));
-    } catch (e) {
-      set(setItemError(id, `Unable to load evolution chain: ${e.message}`));
-    }
-  },
-}));
+    loadItems: (list) => {
+      const { loadItem } = get();
+      setItems(list);
+        
+      /*
+      * Load data for each item
+      */
+      list.forEach((id) => {
+        loadItem(id);
+      });
+    },
+    loadItemSpecies: async (id) => {
+      const { items } = get();
+      try {
+        const item = items[id];
+        if (item) {
+          const species = await getSpecies(item.data.speciesName);
+          setItemData(id, { species });
+        }
+      } catch (e: unknown) {
+        setItemError(id, `Unable to load species: ${e instanceof Error ? e.message : '-'}`);
+      }
+    },
+    loadItemEvolutionChain: async (id) =>  {
+      const { items, loadItem } = get();
+      try {
+        const item = items[id];
+        if (item.data.species?.evolutionChainId) {
+          const evolutionChain = await getEvolucionChain(`${item.data.species.evolutionChainId}`);
+          const siblings = evolutionChain.filter(pokemonId => pokemonId !== id);
+          
+          setItems(siblings);
+          
+          await Promise.all(siblings.map((siblingId) => 
+            loadItem(siblingId),
+          ));
+          
+          setItemData(id, { evolutionChain });
+        }
+      } catch (e) {
+        setItemError(id, `Unable to load evolution chain: ${e instanceof Error ? e.message : '-'}`);
+      }
+    },
+  };
+});
 
 export default usePokemon;
 
-export const usePokemonItem = (id: number) => {
+export const usePokemonItem = (id: Pokemon['id']) => {
   const store = usePokemon();
 
   return {

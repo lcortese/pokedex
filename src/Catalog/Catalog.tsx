@@ -19,7 +19,7 @@ const Catalog = () => {
   const { items, total, loading, loaded, range, error, load, loadPrev, loadNext } = useCatalog();
   const { loadItems } = usePokemon();
 
-  const offset = parseInt(searchParams.get('offset')) || 0;
+  const offset = parseInt(searchParams.get('offset') || '') || 0;
 
   /*
    * Load data

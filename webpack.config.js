@@ -1,10 +1,10 @@
 const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const postcssPresetEnv = require('postcss-preset-env');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyPlugin = require("copy-webpack-plugin");
+const CopyPlugin = require('copy-webpack-plugin');
+const { EnvironmentPlugin } = require("webpack")
 
 module.exports = (env, argv) => {
   const develop = argv.mode === 'development';
@@ -29,9 +29,13 @@ module.exports = (env, argv) => {
     },
     module: {
       rules: [{
-        test: /\.(ts|tsx)?$/,
+        test: /\.[jt]sx?$/,
+        loader: "esbuild-loader",
         include:  path.resolve(__dirname, 'src'),
-        loader: 'babel-loader',
+        options: {
+          loader: "tsx",
+          target: "es2015"
+        }
       }, {
         test: /\.css$/i,
         use: [
@@ -56,13 +60,15 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({
         template: path.join(__dirname, 'src', 'index.html'),
       }),
-      develop && new ForkTsCheckerWebpackPlugin(),
       !develop && new MiniCssExtractPlugin(),
       !develop && new CopyPlugin({
         patterns: [
-          { from: "public" },
+          { from: 'public' },
         ],
       }),
+      new EnvironmentPlugin({
+        NODE_ENV: argv.mode
+      })
     ].filter(Boolean),
   };
 };
