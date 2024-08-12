@@ -1,13 +1,14 @@
 {
   "name": "pokedex",
-  "version": "1.0.0-rc.7",
+  "version": "1.0.0-rc.8",
   "description": "Technical challenge for job interview.",
   "main": "index.js",
   "scripts": {
     "start": "webpack serve --mode development",
     "build": "webpack --mode production",
     "test": "exit 0",
-    "lint": "npm run lint:script",
+    "test:types": "tsc --noEmit",
+    "test:lint": "npm run lint:script",
     "lint:script": "eslint ./src/*",
     "lint:script:fix": "eslint ./src/* --fix",
     "prepare": "husky install"
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@commitlint/cli": "^16.2.1",
     "@commitlint/config-conventional": "^16.2.1",
+    "@types/node": "^22.2.0",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.13",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
@@ -39,6 +41,7 @@
     "esbuild-loader": "^3.0.1",
     "eslint": "^8.10.0",
     "eslint-config-airbnb-typescript": "^16.1.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.29.3",

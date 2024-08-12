@@ -15,17 +15,21 @@ import EvolutionChain from './components/EvolutionChain';
 
 const Pokemon = () => {
   const navigate = useNavigate();
-  const id = parseInt(useParams().id);
+  const id = Number(useParams()?.id);
 
   const { item, load, loadSpecies, loadEvolutionChain } = usePokemonItem(id);
 
+  if (!id) {
+    return <div>Bad Request</div>;
+  }
+
   useEffect(() => {
     window.scrollTo(0, 0);
-    ((async () => {
+    (async () => {
       await load();
       await loadSpecies();
       loadEvolutionChain();
-    })());
+    })();
   }, [id]);
 
   if (!item) {
@@ -34,7 +38,7 @@ const Pokemon = () => {
 
   const goBack = () => {
     if (history.length > 1) {
-      history.back();  
+      history.back();
     } else {
       navigate('/');
     }
@@ -45,19 +49,16 @@ const Pokemon = () => {
       <HeaderPage>
         <BackButton onClick={goBack} />
         <Heading capitalize size={Types.H2}>
-          <SingleLine title={item.data?.name}>{item.data?.name || '-'}</SingleLine>
+          <SingleLine title={item.data?.name}>
+            {item.data?.name || '-'}
+          </SingleLine>
         </Heading>
       </HeaderPage>
 
-      {item.error ? (
-        <p>{item.error}</p>
-      ) : null}
+      {item.error ? <p>{item.error}</p> : null}
 
       <article className="Pokemon__content">
-
-        {item.loading ? (
-          <Loading />
-        ) : null}
+        {item.loading ? <Loading /> : null}
 
         <Card className="Pokemon__content__general" shadow>
           <CardContent className="picture">
@@ -68,40 +69,60 @@ const Pokemon = () => {
 
           <CardContent className="summary">
             <dl className="Pokemon__content__list">
-              <dt><Heading type={Types.H2} size={Types.H6}>Name</Heading></dt>
+              <dt>
+                <Heading type={Types.H2} size={Types.H6}>
+                  Name
+                </Heading>
+              </dt>
               <dd className="capitalize">{item.data?.name || '-'}</dd>
 
-              <dt><Heading type={Types.H2} size={Types.H6}>Habitat</Heading></dt>
-              <dd className="capitalize">{item.data?.species?.habitat || '-'}</dd>
+              <dt>
+                <Heading type={Types.H2} size={Types.H6}>
+                  Habitat
+                </Heading>
+              </dt>
+              <dd className="capitalize">
+                {item.data?.species?.habitat || '-'}
+              </dd>
             </dl>
           </CardContent>
         </Card>
 
         <Card shadow className="Pokemon__content__description">
           <CardHeader>
-            <Heading type={Types.H1} size={Types.H5}>Description</Heading>
+            <Heading type={Types.H1} size={Types.H5}>
+              Description
+            </Heading>
           </CardHeader>
 
           <CardContent>
             {item.loaded && item.data.species?.versions.length ? (
-              item.data?.species?.versions.map(version => (
+              item.data?.species?.versions.map((version) => (
                 <Fragment key={version.name}>
-                  <Heading type={Types.H2} size={Types.H6} capitalize>{version.name}</Heading>
+                  <Heading type={Types.H2} size={Types.H6} capitalize>
+                    {version.name}
+                  </Heading>
                   <p>{version.description}</p>
                 </Fragment>
               ))
-            ) : <p>-</p>}
+            ) : (
+              <p>-</p>
+            )}
           </CardContent>
         </Card>
 
         <Card shadow>
           <CardHeader>
-            <Heading type={Types.H1} size={Types.H5}>Evolution Chain</Heading>
+            <Heading type={Types.H1} size={Types.H5}>
+              Evolution Chain
+            </Heading>
           </CardHeader>
           <CardContent>
             {item.loaded && item.data?.evolutionChain?.length ? (
               <EvolutionChain ids={item.data.evolutionChain} />
-            ) : '-'}
+            ) : (
+              '-'
+            )}
           </CardContent>
         </Card>
       </article>
