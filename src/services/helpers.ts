@@ -1,2 +1,2 @@
-export const extractId = (url: string) => 
-  parseInt(url.split('/').filter(Boolean).pop());
+export const extractId = (url: string) =>
+  Number(url.split('/').filter(Boolean).pop() || '');
